@@ -1,0 +1,50 @@
+ 
+                             [Application Load Balancer (ALB)]
+                                          |
+                         +----------------+----------------+
+                         |                                 |
+                 [Private Subnet A]                [Private Subnet B]
+                         |                                 |
+                -------------------              --------------------
+                | Web App Instance A|            | Web App Instance B |
+                |  (EC2 Instance)   |            |  (EC2 Instance)    |
+                -------------------              --------------------
+                         |                                 |
+             +---------------------------+     +---------------------------+
+             | IAM Role for EC2 Instance |     | IAM Role for EC2 Instance |
+             +---------------------------+     +---------------------------+
+                                                                              
+                      ^                                       ^
+                      |  Scheduled Stop/Start                 |  
+                      |  using AWS Lambda + CloudWatch Events |
+                      |          (Python Scripts)             |
+                      +-------------------------------+-------+
+                                                | 
+                                      [Amazon CloudWatch]
+                                     - Scheduled Rules
+                                     - Metrics & Alarms
+                                                 |
+                                            [Amazon SNS]
+                                       - Email notifications
+                                                 |
+                        +--------------------------------------------+
+                        |           [Amazon RDS (MySQL)]             |
+                        |   - Multi-AZ Deployment in Private Subnet  |
+                        +--------------------------------------------+
+                                             |
+                        +--------------------------------------------+
+                        |               [Amazon S3]                  |
+                        |     - AMI Snapshots / Backups Storage      |
+                        +--------------------------------------------+
+                                              |
+                        +--------------------------------------------------+
+                        |        [IAM Configuration (User + Roles)]        |
+                        |  - IAM User with full project permissions        |
+                        |  - IAM Roles for EC2, Lambda, and backups        |
+                        +--------------------------------------------------+
+                                              |
+                        +--------------------------------------------+
+                        |              [VPC (Multi-AZ)]              |
+                        |  - Public and Private Subnets              |
+                        |  - NAT Gateway in Public Subnet            |
+                        +--------------------------------------------+
